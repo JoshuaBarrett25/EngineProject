@@ -12,3 +12,5 @@ float vertices[] = {
 
 unsigned int VBO;
 unsigned int vertexShader;
+unsigned int fragmentShader;
+unsigned int shaderProgram;

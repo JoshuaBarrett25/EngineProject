@@ -7,6 +7,12 @@ const char* vertexShaderSource = "#version 330 core\n"
 "gl_Position = vec4 (aPos.x, aPos.y, aPos.z, 1.0f);\n"
 "}\n";
 
+const char* fragmentShaderSource = "#version 330 core\n"
+"out vec4 FragColor;\n"
+"void main()\n"
+"{\n"
+"FragColor = vec4(1.0f,0.5f,0.2f,1.0f);\n"
+"}\n";
 
 //Controls the windows updates to it being resized by the user
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -24,6 +30,49 @@ void processInput(GLFWwindow* window)
 	}
 }
 
+void shaderSetup()
+{
+	///Vertex shader/Compiler
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glCompileShader(vertexShader);
+	int success;
+	char infolog[512];
+	//Check if shader is compiling successfully
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(vertexShader, 512, NULL, infolog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infolog << std::endl;
+	}
+
+	///Fragment shader
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infolog);
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infolog << std::endl;
+	}
+
+	///Shader linkage
+	shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		glGetProgramInfoLog(shaderProgram, 512, NULL, infolog);
+		std::cout << "ERROR::SHADER::LINKAGE::COMPILATION_FAILED\n" << infolog << std::endl;
+	}
+	glUseProgram(shaderProgram);
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+}
 
 int main()
 {
@@ -54,20 +103,7 @@ int main()
 	glViewport(0, 0, 800, 600);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	///Vertex shader/Compiler
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
-	int success;
-	char infolog[512];
-	//Check if shader is compiling successfully
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infolog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infolog << std::endl;
-	}
-
+	shaderSetup();
 
 	///Render Loop
 	//Keeps the window drawing new images and handling user inputs till closed
