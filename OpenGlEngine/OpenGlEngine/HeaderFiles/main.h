@@ -5,12 +5,31 @@
 
 
 float vertices[] = {
-	-0.5f, 0.5f, 0.0f,
-	0.5f, -0.5f, 0.0f,
-	0.0f, 0.5f, 0.0f
+	0.1f, 0.1f, 0.0f,
+	0.1f, -0.1f, 0.0f,
+	-0.1f, -0.1f, 0.0f,
+	-0.1f, 0.1f, 0.0f
 };
 
+unsigned indices[] = {
+	0,1,3,	//first tri
+	1,2,3	//second tri
+};
+
+///Vertex buffer object
+//	Vertex data: position, normal vector, colour to the gpu (NON-IMMEDIATE)
 unsigned int VBO;
+
+///Vertex array object
+//	Contains one or more vertex buffer objects
+//	Designed to store the information for a complete object
+unsigned int VAO;
+
+/// Element buffer object
+//	Stores indices that is used to decide what vertices should be drawn.
+unsigned int EBO;
+
+
 unsigned int vertexShader;
 unsigned int fragmentShader;
 unsigned int shaderProgram;

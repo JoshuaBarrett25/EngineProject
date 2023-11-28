@@ -11,7 +11,7 @@ const char* fragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
 "void main()\n"
 "{\n"
-"FragColor = vec4(1.0f,0.5f,0.2f,1.0f);\n"
+"FragColor = vec4(0.6f,1.0f,0.2f,1.0f);\n"
 "}\n";
 
 //Controls the windows updates to it being resized by the user
@@ -19,7 +19,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
-
 
 ///Input Handler
 void processInput(GLFWwindow* window)
@@ -29,6 +28,26 @@ void processInput(GLFWwindow* window)
 		glfwSetWindowShouldClose(window, true);
 	}
 }
+
+
+void objectDraw()
+{
+	//Vertax array binding
+	glBindVertexArray(VAO);
+
+	//Copy the vertices array into a vertex buffer for opengl to use
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	//Copy the index array in a element buffer for opengl to use
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+}
+
+
 
 void shaderSetup()
 {
@@ -72,7 +91,10 @@ void shaderSetup()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
 }
+
 
 int main()
 {
@@ -105,6 +127,16 @@ int main()
 
 	shaderSetup();
 
+	///Wireframe mode
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+
+	objectDraw();
+
 	///Render Loop
 	//Keeps the window drawing new images and handling user inputs till closed
 	while (!glfwWindowShouldClose(window))
@@ -117,9 +149,10 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 		glGenBuffers(1, &VBO);
 		//Bind our new buffer to target
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+		glUseProgram(shaderProgram);
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 
 		//Check events and swap buffers
 		glfwSwapBuffers(window);
