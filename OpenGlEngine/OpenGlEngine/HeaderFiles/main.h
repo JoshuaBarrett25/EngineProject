@@ -8,12 +8,16 @@ float vertices[] = {
 	0.1f, 0.1f, 0.0f,
 	0.1f, -0.1f, 0.0f,
 	-0.1f, -0.1f, 0.0f,
-	-0.1f, 0.1f, 0.0f
+	-0.1f, 0.1f, 0.0f,
+	0.1f,0.3f,0.0f,
+	-0.1f,0.3f,0.0f
 };
 
 unsigned indices[] = {
 	0,1,3,	//first tri
-	1,2,3	//second tri
+	1,2,3,  //second tri
+	4,0,5,	//third tri
+	0,3,5	//fourth tri
 };
 
 ///Vertex buffer object
