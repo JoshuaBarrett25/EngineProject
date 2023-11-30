@@ -128,7 +128,7 @@ int main()
 	shaderSetup();
 
 	///Wireframe mode
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
